@@ -1,0 +1,145 @@
+swagger: '2.0'
+
+info:
+  version: v1
+  title: PingPongfy API
+  description: |
+    Describes restful endpoints for the pingpongfy api.
+    ## Structure
+
+    ### The Response
+    Each successful response (`2xx` status code) follows same generic schema:
+    ```json
+    {
+        "data": {
+            ...
+        }
+    }
+    ```
+
+    On the other hand either client or server errors (`4xx-5xx`) follow this
+    schema:
+    ```json
+    {
+        "errors": [{
+            ...
+        }]
+    }
+    ```
+
+    #### DATA
+    The `data` key contains the information client requested.
+
+    #### ERRORS
+    The `errors` key contains `array` of request errors. For example:
+    ```json
+    {
+        "errors": [
+          {
+            "code": "VALIDATION_ERROR",
+            "message": "e-mail must be valid."
+          },
+          {
+            "code": "VALIDATION_ERROR",
+            "message": "username already registered."
+          }
+        ]
+    }
+    ```
+
+    #### PAGINATION
+    Since the amount of objects returned is expected to be small,
+      no pagination functionality is needed.
+
+################################################################################
+#                  Host, Base Path, Schemes and Content Types                  #
+################################################################################
+basePath: /v1
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+
+################################################################################
+#                                   Parameters                                 #
+################################################################################
+parameters:
+  tableId:
+    name: tableId
+    in: path
+    type: number
+    required: true
+  slotId:
+    name: slotId
+    in: path
+    type: number
+    required: true
+
+################################################################################
+#                                   Paths                                      #
+################################################################################
+paths:
+  /tables:
+    get:
+      description: Get list of tables
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Table'
+
+  /tables/{tableId}/slots/{slotId}/user:
+    parameters:
+      - $ref: '#/parameters/tableId'
+      - $ref: '#/parameters/slotId'
+    patch:
+      description: User joins a slot from a table
+      parameters:
+        - name: id
+          in: body
+          schema:
+            type: number
+          required: true
+      responses:
+        200:
+          description: OK
+
+################################################################################
+#                                 Definitions                                  #
+################################################################################
+definitions:
+  Table:
+    type: object
+    properties:
+      id:
+        type: integer
+      slots:
+        type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/definitions/TableSlot'
+  TableSlot:
+    type: object
+    properties:
+        id:
+          type: integer
+        user:
+          $ref: '#/definitions/User'
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      firstName:
+        type: string
+      lastName:
+        type: string
