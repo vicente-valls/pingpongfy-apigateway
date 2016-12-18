@@ -1,0 +1,25 @@
+{
+  "name": "pingpongfy-api",
+  "version": "1.0.0",
+  "description": "PingPongfy API",
+  "scripts": {
+    "test": "gulp swagger-validation"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vicente-valls/pingpongfy-api.git"
+  },
+  "author": {
+    "name": "Vicente Valls",
+    "email": "vicentevr1985@gmail.com"
+  },
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/vicente-valls/pingpongfy-api/issues"
+  },
+  "homepage": "https://github.com/vicente-valls/pingpongfy-api#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-swagger": "^1.0.1"
+  }
+}
