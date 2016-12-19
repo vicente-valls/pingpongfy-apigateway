@@ -63,6 +63,25 @@ consumes:
   - application/json
 
 ################################################################################
+#                                   Security                                   #
+################################################################################
+securityDefinitions:
+  PingpongfyUserPool:
+      type: apiKey
+      description: |
+        The api key sent must be the identity token of the signed-in user from the user pool of aws cognito.
+         See aws documentation for more information
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: cognito_user_pools
+      x-amazon-apigateway-authorizer:
+        type: "cognito_user_pools"
+        providerARNs:
+          - >
+            arn:aws:cognito-idp:${stageVariables.region}:
+            ${stageVariables.accountId}:userpool/${stageVariables.userPoolId}
+
+################################################################################
 #                                   Parameters                                 #
 ################################################################################
 parameters:
@@ -84,6 +103,8 @@ paths:
   /tables:
     get:
       description: Get list of tables
+      security:
+        - PingpongfyUserPool: []
       responses:
         200:
           description: OK
@@ -94,6 +115,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Table'
+      x-amazon-apigateway-integration:
+        type: http
+        responses:
+          default:
+            statusCode: 200
+        uri: https://${stageVariables.backendDomain}/v1/tables
+        passthroughBehavior: when_no_match
+        httpMethod: GET
 
   /tables/{tableId}/slots/{slotId}/user:
     parameters:
@@ -101,6 +130,8 @@ paths:
       - $ref: '#/parameters/slotId'
     patch:
       description: User joins a slot from a table
+      security:
+        - PingpongfyUserPool: []
       parameters:
         - name: id
           in: body
@@ -110,6 +141,17 @@ paths:
       responses:
         200:
           description: OK
+      x-amazon-apigateway-integration:
+        type: http
+        responses:
+          default:
+            statusCode: 200
+        requestParameters:
+          integration.request.path.tableId: method.request.path.tableId
+          integration.request.path.slotId: method.request.path.slotId
+        uri: https://${stageVariables.backendDomain}/v1/tables/{tableId}/slots/{slotId}/user
+        passthroughBehavior: when_no_match
+        httpMethod: PATCH
 
 ################################################################################
 #                                 Definitions                                  #

@@ -1,9 +1,10 @@
-# pingpongfy-api
+# pingpongfy-apigateway
 
 [![Build Status](https://travis-ci.org/vicente-valls/pingpongfy-api.svg?branch=master)](https://travis-ci.org/vicente-valls/pingpongfy-api)
 
 ## Introduction
-This repo represents the API part of the PingPongfy project described [here](https://github.com/vicente-valls/pingpongfy-doc).
+Following repo holds the `swagger.yml` file which describes the API Gateway used by clients (browsers, mobile apps).
+More info can be found [here](https://github.com/vicente-valls/pingpongfy-doc).
 
 ## Dependencies
 * Node v7.2.1
