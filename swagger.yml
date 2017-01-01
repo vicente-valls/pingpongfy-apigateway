@@ -76,25 +76,10 @@ securityDefinitions:
       x-amazon-apigateway-authtype: cognito_user_pools
       x-amazon-apigateway-authorizer:
         type: "cognito_user_pools"
+        # sadly you cant use stage variables for defining pools, so it has to be hardcoded
         providerARNs:
           - >
-            arn:aws:cognito-idp:${stageVariables.region}:
-            ${stageVariables.accountId}:userpool/${stageVariables.userPoolId}
-
-################################################################################
-#                                   Parameters                                 #
-################################################################################
-parameters:
-  tableId:
-    name: tableId
-    in: path
-    type: number
-    required: true
-  slotId:
-    name: slotId
-    in: path
-    type: number
-    required: true
+            arn:aws:cognito-idp:us-east-1:309975787224:userpool/us-east-1_L6On36cv6
 
 ################################################################################
 #                                   Paths                                      #
@@ -124,10 +109,7 @@ paths:
         passthroughBehavior: when_no_match
         httpMethod: GET
 
-  /tables/{tableId}/slots/{slotId}/user:
-    parameters:
-      - $ref: '#/parameters/tableId'
-      - $ref: '#/parameters/slotId'
+  '/tables/{tableId}/slots/{slotId}/user':
     patch:
       description: User joins a slot from a table
       security:
@@ -137,6 +119,14 @@ paths:
           in: body
           schema:
             type: number
+          required: true
+        - name: tableId
+          in: path
+          type: number
+          required: true
+        - name: slotId
+          in: path
+          type: number
           required: true
       responses:
         200:
