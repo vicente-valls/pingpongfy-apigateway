@@ -1,7 +1,7 @@
 swagger: '2.0'
 
 info:
-  version: v1
+  version: %version%
   title: PingPongfy API
   description: |
     Describes restful endpoints for the pingpongfy api.
@@ -76,10 +76,9 @@ securityDefinitions:
       x-amazon-apigateway-authtype: cognito_user_pools
       x-amazon-apigateway-authorizer:
         type: "cognito_user_pools"
-        # sadly you cant use stage variables for defining pools, so it has to be hardcoded
         providerARNs:
           - >
-            arn:aws:cognito-idp:us-east-1:309975787224:userpool/us-east-1_L6On36cv6
+            %aws-arn-incognito-pool%
 
 ################################################################################
 #                                   Paths                                      #

@@ -12,3 +12,16 @@ script:
 cache:
     directories:
         - node_modules
+
+before_deploy:
+    - travis setup releases
+    - tools/build-artifact.sh -t $TRAVIS_TAG -i $ARN_INCOGNITO_POOL
+
+deploy:
+    provider: releases
+    api-key: $GITHUB_TOKEN
+    file: ${TRAVIS_TAG}-pingpongfy-apigateway.yml
+    skip_cleanup: true
+    overwrite: true
+    on:
+        tags: true
