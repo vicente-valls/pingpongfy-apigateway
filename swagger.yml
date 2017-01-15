@@ -78,7 +78,7 @@ securityDefinitions:
         type: "cognito_user_pools"
         providerARNs:
           - >
-            "%aws-arn-incognito-pool%"
+            %aws-arn-incognito-pool%
 
 ################################################################################
 #                                   Paths                                      #
