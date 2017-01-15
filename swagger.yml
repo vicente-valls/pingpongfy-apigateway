@@ -1,7 +1,7 @@
 swagger: '2.0'
 
 info:
-  version: %version%
+  version: "%version%"
   title: PingPongfy API
   description: |
     Describes restful endpoints for the pingpongfy api.
@@ -78,7 +78,7 @@ securityDefinitions:
         type: "cognito_user_pools"
         providerARNs:
           - >
-            %aws-arn-incognito-pool%
+            "%aws-arn-incognito-pool%"
 
 ################################################################################
 #                                   Paths                                      #
