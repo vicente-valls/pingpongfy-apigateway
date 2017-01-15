@@ -5,7 +5,8 @@ node_js:
 
 install:
     - npm install
-    - travis version
+    - gem install travis -v 1.8.5 --no-rdoc --no-ri
+
 script:
     - npm test
 
