@@ -12,3 +12,16 @@ script:
 cache:
     directories:
         - node_modules
+
+before_deploy:
+    - tools/build-artifact.sh -t $TRAVIS_TAG -i $ARN_INCOGNITO_POOL
+
+deploy:
+    provider: releases
+    api-key:
+        secure: GNW7+Dlq8EzDKyXVu6xv8MKlEZTiCVXyG4wAT/uBKuQafTI7suCUi39rONydj7Uh9zB5HoEDjrsNTvVfnM/OQ7Fr4Xy3jQvgMK7lAGflr056XFMAPrMq8DT93r5mNl36xUFYSRi45VWJzx3IhDpfV5Dqaa/qRh9/UoZBpSb3qDrMWJX0d9yuRWmR/7GKk8oPKr58SbJco/afEbyUZwhhbEkt90RRFPDo3OQ0aHLKsVgAFdybHb5TI6ggLRdLzALuET0bpaVCZgJgbK6xiYGUVdAChPsQFzpSHIOBgkXqVCQdkFQzp4pQ0wLO73u+nwyLRPV2ENSH/3ZLTamf+sBu0kEISlgbnzunsh4o6M70VGX09zsA3sp9zYlMosSBr6DqXku8o0NtF1gnEpVOTvyI8VA4qtkEUbqC3Y/w6R53jbpvYsDfaNoikjENF4iJ5Ajc8U+qGCTKd9vFuCPSAX7bBRKvmqsNcSa1nmKlceSGvyA5uGEIBk0rW8v+KKjyp3UfcxMLpGVCdSbglhuPoU6EeGvhb61vAG70SyVu1/uScO2lb4MvVmhc1Ei7xSPDVkWH+P+xEImWuaLajAK7yB41XYHupZP2uLLsgDkhTypwSGGEZQNTGhsqQL4Ph+LgqN6G7eOgb/HFiheD6CipU6f5Wy2/PZ8sdsl69M8uT9eZ/QM=
+    file: ${TRAVIS_TAG}-pingpongfy-apigateway.yml
+    skip_cleanup: true
+    overwrite: true
+    on:
+        tags: true
