@@ -15,7 +15,7 @@ cache:
         - node_modules
 
 before_deploy:
-    - travis setup releases
+    - travis setup releases --no-interactive
     - tools/build-artifact.sh -t $TRAVIS_TAG -i $ARN_INCOGNITO_POOL
 
 deploy:
