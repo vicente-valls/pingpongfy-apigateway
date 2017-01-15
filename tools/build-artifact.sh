@@ -37,8 +37,10 @@ if [ -z "${ARN_INCOGNITO_POOL}" ]; then
   usage
 fi
 
-FILENAME=${TAG}-pingpongfy-apigateway.yml
+ARN_INCOGNITO_POOL_REPLACEMENT=$(echo ${ARN_INCOGNITO_POOL} | sed -e 's/\//\\\//g')
 
-cp swagger.yml ${FILENAME}
-sed -i "s/%aws-arn-incognito-pool%/${ARN_INCOGNITO_POOL}/" ${FILENAME}
-sed -i "s/%version%/${TAG}/" ${FILENAME}
+RELEASE_FILENAME=${TAG}-pingpongfy-apigateway.yml
+cp swagger.yml ${RELEASE_FILENAME}
+
+sed -i "s/%aws-arn-incognito-pool%/${ARN_INCOGNITO_POOL_REPLACEMENT}/" ${RELEASE_FILENAME}
+sed -i "s/%version%/${TAG}/" ${RELEASE_FILENAME}
