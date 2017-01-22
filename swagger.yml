@@ -107,7 +107,34 @@ paths:
         uri: https://${stageVariables.backendDomain}/v1/tables
         passthroughBehavior: when_no_match
         httpMethod: GET
-
+    post:
+      description: Creates a new table
+      security:
+        - PingpongfyUserPool: []
+      parameters:
+        - name: name
+          description: name of the table
+          in: body
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Table'
+      x-amazon-apigateway-integration:
+        type: http
+        responses:
+          default:
+            statusCode: 200
+        uri: https://${stageVariables.backendDomain}/v1/tables
+        passthroughBehavior: when_no_match
+        httpMethod: POST
   '/tables/{tableId}/slots/{slotId}/user':
     patch:
       description: User joins a slot from a table
@@ -151,6 +178,8 @@ definitions:
     properties:
       id:
         type: integer
+      name:
+        type: string
       slots:
         type: object
         properties:
