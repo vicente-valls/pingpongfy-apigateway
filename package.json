@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "PingPongfy API",
   "scripts": {
-    "test": "gulp swagger-validation"
+    "test": "./node_modules/.bin/gulp swagger-validation"
   },
   "repository": {
     "type": "git",
