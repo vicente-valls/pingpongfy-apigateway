@@ -4,12 +4,13 @@ node_js:
     - "7.4"
 
 install:
-    - npm install
+    - yarn install
 
 script:
-    - npm test
+    - yarn test
 
 cache:
+    yarn: true
     directories:
         - node_modules
 
