@@ -169,7 +169,6 @@ definitions:
     properties:
       name:
         type: string
-        required: true
       description:
         type: string
   Table:
