@@ -134,9 +134,9 @@ paths:
         uri: https://${stageVariables.backendDomain}/v1/tables
         passthroughBehavior: when_no_match
         httpMethod: POST
-  /tables/{tableId}/update-status-schedule:
-    post:
-      description: creates new schedule to update table status
+  /tables/{tableId}:
+    patch:
+      description: updates table status of certain table
       security:
         - PingpongfyUserPool: []
       parameters:
@@ -144,6 +144,10 @@ paths:
           in: path
           type: number
           required: true
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/UpdateTable"
       responses:
         200:
           description: OK
@@ -154,9 +158,9 @@ paths:
             statusCode: 200
         requestParameters:
           integration.request.path.tableId: method.request.path.tableId
-        uri: https://${stageVariables.backendDomain}/v1/tables/{tableId}/update-status-schedule
+        uri: https://${stageVariables.backendDomain}/v1/tables/{tableId}
         passthroughBehavior: when_no_match
-        httpMethod: POST
+        httpMethod: PATCH
 
 ################################################################################
 #                                 Definitions                                  #
@@ -185,3 +189,10 @@ definitions:
       updatedAt:
         type: string
         description: iso8601 format
+  UpdateTable:
+    type: object
+    required:
+      - isFree
+    properties:
+      isFree:
+        type: boolean
