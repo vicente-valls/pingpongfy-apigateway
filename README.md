@@ -7,10 +7,15 @@ Following repo holds the `swagger.yml` file which describes the API Gateway used
 More info can be found [here](https://github.com/vicente-valls/pingpongfy-doc).
 
 ## Dependencies
+* nvm
+* yarn
 * Node v7.2.1
 
 ## Installation
-`$ npm install`
+```
+$ nvm use 7.2.1
+$ yarn install
+```
 
 ## Test
-`$ npm test`
+`$ yarn test`
