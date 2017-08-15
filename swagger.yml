@@ -13,7 +13,8 @@ info:
     {
         "data": {
             ...
-        }
+        },
+        "errors": []
     }
     ```
 
@@ -21,6 +22,7 @@ info:
     schema:
     ```json
     {
+        "data": [],
         "errors": [{
             ...
         }]
@@ -31,18 +33,38 @@ info:
     The `data` key contains the information client requested.
 
     #### ERRORS
-    The `errors` key contains `array` of request errors. For example:
+    The `errors` key contains `array` of request errors. Validation errors look like:
     ```json
     {
+        "data": [],
         "errors": [
-          {
-            "code": "VALIDATION_ERROR",
-            "message": "e-mail must be valid."
-          },
-          {
-            "code": "VALIDATION_ERROR",
-            "message": "username already registered."
-          }
+            {
+                "code": "VALIDATION_ERROR",
+                "message": "",
+                "validationErrors": [
+                    {
+                        "property": "id",
+                        "value": "1",
+                        "constraints": {
+                            "length": "id must be longer than 5 characters"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+    ```
+
+    While internal (5xx) errors:
+    ```json
+    {
+        "data": [],
+        "errors": [
+            {
+                "code": "INTERNAL_ERROR",
+                "message": "something unexpected happened",
+                "validationErrors": []
+            }
         ]
     }
     ```
@@ -66,19 +88,12 @@ consumes:
 #                                   Security                                   #
 ################################################################################
 securityDefinitions:
-  PingpongfyUserPool:
+  XApiKey:
       type: apiKey
       description: |
-        The api key sent must be the identity token of the signed-in user from the user pool of aws cognito.
-         See aws documentation for more information
-      name: Authorization
+        The api key sent to client for the basic authentication
+      name: x-api-key
       in: header
-      x-amazon-apigateway-authtype: cognito_user_pools
-      x-amazon-apigateway-authorizer:
-        type: "cognito_user_pools"
-        providerARNs:
-          - >
-            %aws-arn-incognito-pool%
 
 ################################################################################
 #                                   Paths                                      #
@@ -88,7 +103,7 @@ paths:
     get:
       description: Get list of tables
       security:
-        - PingpongfyUserPool: []
+        - XApiKey: []
       responses:
         200:
           description: OK
@@ -110,7 +125,7 @@ paths:
     post:
       description: Creates a new table
       security:
-        - PingpongfyUserPool: []
+        - XApiKey: []
       parameters:
         - name: body
           in: body
@@ -135,10 +150,10 @@ paths:
         passthroughBehavior: when_no_match
         httpMethod: POST
   /tables/{tableId}:
-    patch:
+    put:
       description: updates table status of certain table
       security:
-        - PingpongfyUserPool: []
+        - XApiKey: []
       parameters:
         - name: tableId
           in: path
@@ -151,6 +166,13 @@ paths:
       responses:
         200:
           description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Table"
       x-amazon-apigateway-integration:
         type: http
         responses:
@@ -160,8 +182,27 @@ paths:
           integration.request.path.tableId: method.request.path.tableId
         uri: https://${stageVariables.backendDomain}/v1/tables/{tableId}
         passthroughBehavior: when_no_match
-        httpMethod: PATCH
-
+        httpMethod: PUT
+    delete:
+      description: deletes a table
+      parameters:
+        - name: tableId
+          in: path
+          type: number
+          required: true
+      responses:
+        200:
+          description: OK
+      x-amazon-apigateway-integration:
+        type: http
+        responses:
+          default:
+            statusCode: 200
+        requestParameters:
+          integration.request.path.tableId: method.request.path.tableId
+        uri: https://${stageVariables.backendDomain}/v1/tables/{tableId}
+        passthroughBehavior: when_no_match
+        httpMethod: DELETE
 ################################################################################
 #                                 Definitions                                  #
 ################################################################################
@@ -169,10 +210,10 @@ definitions:
   CreateTable:
     type: object
     required:
-      - name
+      - id
     properties:
       name:
-        type: string
+        id: string
       description:
         type: string
   Table:
