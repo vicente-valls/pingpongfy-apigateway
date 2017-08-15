@@ -212,16 +212,14 @@ definitions:
     required:
       - id
     properties:
-      name:
-        id: string
+      id:
+        type: string
       description:
         type: string
   Table:
     type: object
     properties:
       id:
-        type: integer
-      name:
         type: string
       description:
         type: string
